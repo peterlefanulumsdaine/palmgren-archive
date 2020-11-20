@@ -29,26 +29,26 @@ open import V-model-pt6         -- 853 lines
 
 ext-eq' : {Γ : ctx}
 --
-      -> (A  A' : ty Γ) 
+      -> (A  A' : ty Γ)
       -> (Γ ==> A == A')
 -- --------------------------
      -> << Ctx >> (Γ ▷ A) ~ (Γ ▷ A')
-ext-eq' {Γ} A A' p = <<>> (ext-eq {Γ} A A' p) --  <<>> (ext-eq' {Γ} A A' p) 
+ext-eq' {Γ} A A' p = <<>> (ext-eq {Γ} A A' p) --  <<>> (ext-eq' {Γ} A A' p)
 
 
 
 
 ext-eq-lm' : {Γ : ctx}
-      -> (A  A' : ty Γ) 
+      -> (A  A' : ty Γ)
       -> (p : Γ ==> A == A')
       -> (x : || κ Γ ||)
       -> (y : || κ (apt A x)||)
       -> < κ (Γ ▷ A') > aps (subst-trp (ext-eq' A A' p)) (x , y) ~ (x , (ap (κ-Fam ±± ape p x) y))
-ext-eq-lm' {Γ} A A' p x y = refl _ _ 
+ext-eq-lm' {Γ} A A' p x y = refl _ _
 
 
-mk-Par-cong :  {Γ : ctx} 
-            -> (A  A' : ty Γ) 
+mk-Par-cong :  {Γ : ctx}
+            -> (A  A' : ty Γ)
             -> (p : Γ ==> A == A')
             -> (B : ty (Γ ▷ A))
             -> (B' : ty (Γ ▷ A'))
@@ -57,11 +57,11 @@ mk-Par-cong :  {Γ : ctx}
             ->  << Par VV κ-Fam >>  ap1 (mk-Par A B) x ~ ap1 (mk-Par  A' B') x
 mk-Par-cong {Γ} A A' p B B' q x = <<>>
   (
-          (ape p x) , 
-          (λ y → 
+          (ape p x) ,
+          (λ y →
                  let
                      q1 = ape q (x , y)
-                     eq2 = (ext-eq' A A' p)  
+                     eq2 = (ext-eq' A A' p)
                      eq :  < κ (Γ ▷ A') >
                               aps (subst-trp eq2) (x , y) ~  (x , ap (κ-Fam ±± ape p x) y)
                      eq =  ext-eq-lm {Γ} A A' p x y --  <> (ext-eq-lm {Γ} A A' p x y)
@@ -72,8 +72,8 @@ mk-Par-cong {Γ} A A' p B B' q x = <<>>
                      lm = >><< (extensionality1 (ty.type B') _ _ eq)
                      main : << VV >> Fxx (ap1 (mk-Par A B) x) • y ~
                                  (Fxx (ap1 (mk-Par A' B') x) • ap (κ-Fam ±± ape p x) y)
-                     main = <<>> (traV (>><< q1) lm) 
-                 in main) 
+                     main = <<>> (traV (>><< q1) lm)
+                 in main)
    )
 
 
@@ -81,7 +81,7 @@ mk-Par-cong {Γ} A A' p B B' q x = <<>>
 
 Π-f-cong : {Γ : ctx}
 --
-      -> (A  A' : ty Γ) 
+      -> (A  A' : ty Γ)
       -> (p : Γ ==> A == A')
       -> (B : ty (Γ ▷ A))
       -> (B' : ty (Γ ▷ A'))

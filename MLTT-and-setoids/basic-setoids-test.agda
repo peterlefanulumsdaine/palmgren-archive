@@ -122,7 +122,7 @@ mutual
   T (w a b)   = W (T a) (\x -> T (b x))
   T (id a b c) = Id (T a) b c
 
--- Axiom for forming families over a disjoint union 
+-- Axiom for forming families over a disjoint union
 -- provable for A B in U
 
 
@@ -150,7 +150,7 @@ Jrec A a b C d c =  J {A} {a} {b} {C} d c
 
 
 Isub : {A : Set} -> (P : A -> Set)  ->  {x y : A} -> (Id A x y) -> (P x) -> (P y)
-Isub {A} P {x} {y} p = Jrec A x y (\u -> \v -> \w -> (P u) -> (P v)) ((\v -> v)) p 
+Isub {A} P {x} {y} p = Jrec A x y (\u -> \v -> \w -> (P u) -> (P v)) ((\v -> v)) p
 
 Ifunext : {A  B : Set} -> (f : A -> B)  ->  {x y : A} -> (Id A x y) -> Id B (f x) (f y)
 Ifunext {A} {B} f {x} {y} p  = Jrec A x y (\x -> \y -> \z -> Id B (f x) (f y)) rf p
@@ -181,7 +181,7 @@ impE : {A : Set} -> {B : Set} -> (implies A B) -> A -> B
 impE f a = f a
 
 fun : (A : Set) -> (B : Set)  -> Set
-fun A B = A -> B 
+fun A B = A -> B
 
 all : (A : Set) -> (B : A -> Set) -> Set
 all A B = (x : A) -> B x
@@ -206,7 +206,7 @@ andR {A} {B} c = prj2 c
 exists : (A : Set) -> (B : A -> Set) -> Set
 exists A B =  Σ A B
 
-existsI : {A : Set} -> {B : A -> Set} -> 
+existsI : {A : Set} -> {B : A -> Set} ->
           (a : A) -> (b : B a) -> exists A B
 existsI a b = ( a , b )
 
@@ -223,7 +223,7 @@ orE : {A B : Set} -> {C : (or A B) -> Set}
    -> ((a : A) -> C (orL a)) -> ((b : B) -> C (orR b)) -> (c : or A B) -> C c
 orE = D
 
-orEweak : {A B C : Set} 
+orEweak : {A B C : Set}
    -> (A -> C) -> (B -> C)  -> (c : or A B) -> C
 orEweak f g (inl a) = f a
 orEweak f g (inr b) = g b
@@ -265,32 +265,32 @@ non-trivial-Bool = impI (λ p → Isub Val p tt)
 
 -- sums are disjoint.
 
-is-inl :  (A B : Set) -> (u : A + B) -> Bool 
+is-inl :  (A B : Set) -> (u : A + B) -> Bool
 is-inl A B u = D (\a -> true) (\b -> false) u
 
-is-inr :  (A B : Set) -> (u : A + B) -> Bool 
+is-inr :  (A B : Set) -> (u : A + B) -> Bool
 is-inr A B u = D (\a -> false) (\b -> true) u
 
-disjointness-sum :  (A B : Set) -> (a : A) -> (b : B) 
+disjointness-sum :  (A B : Set) -> (a : A) -> (b : B)
             -> not (Id (A + B) (inl a) (inr b))
 disjointness-sum A B a b = impI (λ p → impE non-trivial-Bool (Ifunext (is-inl A B) p))
 
-disjointness-sum2 :  (A B : Set) -> (a : A) -> (b : B) 
+disjointness-sum2 :  (A B : Set) -> (a : A) -> (b : B)
             -> not (Id (A + B) (inr b) (inl a))
 disjointness-sum2 A B a b = impI (λ p → impE non-trivial-Bool (Ifunext (is-inr A B) p))
 
 -- inl and inr are injective proved using code-encode of
--- p 85-86 in HoTT (but use  LD instead of full universe). 
+-- p 85-86 in HoTT (but use  LD instead of full universe).
 -- Vaguely seen this before. Wilander's paper?
 
-code-inl : (A B : Set) -> (a : A) -> (u : (A + B)) -> Set 
+code-inl : (A B : Set) -> (a : A) -> (u : (A + B)) -> Set
 code-inl A B a = (LD A B (\x -> Id A a x)  (\y -> False))
 
-code-inr : (A B : Set) -> (b : B) -> (u : (A + B)) -> Set 
+code-inr : (A B : Set) -> (b : B) -> (u : (A + B)) -> Set
 code-inr A B b = (LD A B (\x -> False)  (\y -> Id B b y))
 
 encode-inl :  (A B : Set) -> (a : A) -> (u : A + B) -> (Id (A + B) (inl a) u) -> (code-inl A B a u)
-encode-inl A B a u p  = Isub (code-inl A B a) p rf 
+encode-inl A B a u p  = Isub (code-inl A B a) p rf
 
 encode-inr :  (A B : Set) -> (b : B) -> (u : A + B) -> (Id (A + B) (inr b) u) -> (code-inr A B b u)
 encode-inr A B b u p  = Isub (code-inr A B b) p rf
@@ -303,7 +303,7 @@ inr-injective A B b d p = encode-inr A B b (inr d) p
 
 
 Isym : (A : Set) -> (x y : A) -> Id A x y -> Id A y x
-Isym A x y p = Jrec A x y ((\x -> \y ->  \z -> Id A y x)) rf p 
+Isym A x y p = Jrec A x y ((\x -> \y ->  \z -> Id A y x)) rf p
 
 Itra : (A : Set) -> (x y z : A) -> Id A x y -> Id A y z -> Id A x z
 Itra A x y z p q =  impE (Jrec A x y ((\u -> \v ->  \w -> implies (Id A v z) (Id A u z) ))
@@ -365,7 +365,7 @@ record <_>_~_ (X : setoid) (a b : || X ||) : Set where
 refl : (X : setoid) -> (a : || X ||) ->  < X > a ~ a
 refl X a = <> ((Refl (setoid.eqrel X)) a)
 
-sym :  {X : setoid} -> {a : || X ||} -> {b : || X ||} -> < X > a ~ b  ->  < X > b ~ a 
+sym :  {X : setoid} -> {a : || X ||} -> {b : || X ||} -> < X > a ~ b  ->  < X > b ~ a
 sym {X} {a} {b} p = <> (impE (((Sym (setoid.eqrel X)) a) b) (>< p))
 
 tra :  {X : setoid} -> {a : || X ||} -> {b : || X ||} -> {c : || X ||} -> < X > a ~ b  -> < X > b ~ c ->  < X > a ~ c
@@ -422,7 +422,7 @@ record <<_>>_~_ (X : classoid) (a b : ||| X |||) : Set where
 refl' : (X : classoid) -> (a : ||| X |||) ->  << X >> a ~ a
 refl' X a = <<>> (Eqrel'.rf' (classoid.eqrel X) a)
 
-sym' :  {X : classoid} -> {a : ||| X |||} -> {b : ||| X |||} -> << X >> a ~ b  ->  << X >> b ~ a 
+sym' :  {X : classoid} -> {a : ||| X |||} -> {b : ||| X |||} -> << X >> a ~ b  ->  << X >> b ~ a
 sym' {X} {a} {b} p = <<>> (Eqrel'.sy' (classoid.eqrel X) a b (>><< p ))
 
 tra' :  {X : classoid} -> {a : ||| X |||} -> {b : ||| X |||} -> {c : ||| X |||} -> << X >> a ~ b  -> << X >> b ~ c ->  << X >> a ~ c
@@ -443,9 +443,9 @@ Id-to-Eq X {x} {y} p = Jrec || X || x y (λ u v z →  < X > u ~ v) (refl X _) p
 triv-setoid : Set -> setoid
 triv-setoid A = record { object = A
                        ; _∼_  =  (\x ->  (\y -> True))
-                       ; eqrel = andI (allI (λ a → tt)) 
-                         (andI (allI (λ a → allI (λ b → impI (λ p → tt)))) 
-                            (allI (λ a → allI (λ b → allI (λ c → impI (λ p → impI (λ q → tt))))))) } 
+                       ; eqrel = andI (allI (λ a → tt))
+                         (andI (allI (λ a → allI (λ b → impI (λ p → tt))))
+                            (allI (λ a → allI (λ b → allI (λ c → impI (λ p → impI (λ q → tt))))))) }
 
 
 -- free setoid on a type
@@ -453,9 +453,9 @@ triv-setoid A = record { object = A
 free-setoid : Set -> setoid
 free-setoid A = record { object = A
                           ; _∼_  =  (\x ->  (\y -> Id A x y))
-                          ; eqrel = andI (allI (λ a → rf)) 
-                          (andI (allI (λ a → allI (λ b → impI (λ p → Isym A a b p)))) 
-                            (allI (λ a → allI (λ b → allI (λ c → impI (λ p → impI (λ q → Itra A a b c p q))))))) } 
+                          ; eqrel = andI (allI (λ a → rf))
+                          (andI (allI (λ a → allI (λ b → impI (λ p → Isym A a b p))))
+                            (allI (λ a → allI (λ b → allI (λ c → impI (λ p → impI (λ q → Itra A a b c p q))))))) }
 
 
 
@@ -475,11 +475,11 @@ setoidmaps : (A B : setoid) -> setoid
 setoidmaps A B = record {object = setoidmap A B
                           ; _∼_  =  exteq {A} {B}
                           ; eqrel = andI (allI (λ a x → refl B _))
-                                         (andI (allI (λ a → allI (λ b → impI (λ p x →  
-                                                       sym (p x))))) 
-                                              ((allI (λ a → allI (λ b → (allI (λ c → 
-                                                 impI (λ p → impI (λ q x → 
-                                          tra (p x) (q x))) )))))))                         
+                                         (andI (allI (λ a → allI (λ b → impI (λ p x →
+                                                       sym (p x)))))
+                                              ((allI (λ a → allI (λ b → (allI (λ c →
+                                                 impI (λ p → impI (λ q x →
+                                          tra (p x) (q x))) )))))))
                          }
 
 
@@ -491,7 +491,7 @@ A => B = setoidmaps A B
 ap : {A B : setoid} -> (f : || A => B ||) -> (a : || A ||) -> || B ||
 ap f a  = setoidmap.op f a
 
-extensionality : {A B : setoid} -> (f : || A => B ||) -> (x y : || A ||) -> 
+extensionality : {A B : setoid} -> (f : || A => B ||) -> (x y : || A ||) ->
              (< A > x ~ y) ->  (< B > (ap f x) ~ (ap f y))
 extensionality {A} {B} f x y p = impE (setoidmap.ext f x y) p
 
@@ -505,7 +505,7 @@ binsetoidmap-helper : {A B C : setoid} -> (f : || A || -> || B || -> || C ||)
   -> (p : (a a' : || A ||) -> (< A > a ~ a' -> (b : || B ||) -> < C > f a b ~ f a' b))
   -> (q : (a : || A ||) ->  (b b' : || B ||) -> (< B > b ~ b' ->  < C > f a b ~ f a b'))
   -> || A => (B => C) ||
-binsetoidmap-helper {A} {B} {C} f p q 
+binsetoidmap-helper {A} {B} {C} f p q
              = record { op =  (\x -> record { op =   (\y -> f x y)
                                            ; ext = allI (\u ->  allI (\v -> impI (\p ->  (q x u v (<> p)))))
                                            })
@@ -513,23 +513,23 @@ binsetoidmap-helper {A} {B} {C} f p q
                       }
 
 trinsetoidmap-helper : {A B C D : setoid} -> (f : || A || -> || B || -> || C || -> || D ||)
- ->  (p : (a a' : || A ||) -> < A > a ~ a' -> (b : || B ||) -> (c : || C ||) 
+ ->  (p : (a a' : || A ||) -> < A > a ~ a' -> (b : || B ||) -> (c : || C ||)
       -> < D > f a b c ~ f a' b c)
  ->  (q : (a : || A ||) -> (b b' : || B ||) ->   < B > b ~ b' -> (c : || C ||) -> < D > f a b c ~ f a b' c)
  ->  (t : (a : || A ||) -> (b : || B ||) -> (c c' : || C ||) -> < C >  c ~ c' -> < D > f a b c ~ f a b c')
  -> || A => (B => (C => D)) ||
-trinsetoidmap-helper {A} {B} {C} {D} f p q t 
+trinsetoidmap-helper {A} {B} {C} {D} f p q t
                     = record { op = (\x -> record { op = (\y -> record { op = (\z -> f x y z)
-                                                                            ; ext = allI (\u ->  
-                                                                                    allI (\v -> 
+                                                                            ; ext = allI (\u ->
+                                                                                    allI (\v ->
                                                                                       impI (\p' -> t x y u v p')))
                                                                             })
-                                                     ; ext = allI (\u ->  
-                                                              allI (\v -> 
+                                                     ; ext = allI (\u ->
+                                                              allI (\v ->
                                                                 impI (\p' -> λ x' → q x u v p' x')))
                                                      })
-                             ; ext =  allI (\u ->  
-                                        allI (\v -> 
+                             ; ext =  allI (\u ->
+                                        allI (\v ->
                                           impI (\p' -> λ x x' → p u v p' x x')))
                               }
 
@@ -544,19 +544,19 @@ idmap {A} = record { op =  (\x -> x)
 infix 5 _°_
 
 _°_ : {A B C : setoid} -> (f : || B => C ||) -> (g : || A => B ||) -> || A => C ||
-_°_ {A} {B} {C} f g =  record { op =   (\x -> ap f (ap g x)) 
-                              ; ext =  allI (λ u → allI (λ v → 
-                                   impI (λ p →    (setoidmap.ext f (ap g u) (ap g v)) 
-                                                         (setoidmap.ext g u v p)    
+_°_ {A} {B} {C} f g =  record { op =   (\x -> ap f (ap g x))
+                              ; ext =  allI (λ u → allI (λ v →
+                                   impI (λ p →    (setoidmap.ext f (ap g u) (ap g v))
+                                                         (setoidmap.ext g u v p)
                                       )))
                                }
-                                                 
+
 _≅_ : setoid -> setoid -> Set
-A ≅ B = Σ || A => B || (\f ->  
-        Σ || B => A || (\g -> 
+A ≅ B = Σ || A => B || (\f ->
+        Σ || B => A || (\g ->
            (and ((x : || A ||) -> < A > ap g (ap f x) ~ x)
                 ((y : || B ||) -> < B > ap f (ap g y) ~ y))))
-    
+
 fwd : {A B : setoid} -> (A ≅ B) -> || A => B ||
 fwd p = pj1 p
 
@@ -588,15 +588,15 @@ exteq1 {A} {B} f g = (x : || A ||) ->  << B >> (f • x) ~ (g • x)
 setoidmaps1 : (A : setoid) -> (B : classoid) -> classoid
 setoidmaps1 A B = record {object = setoidmap1 A B
                           ; _∼_  =  exteq1 {A} {B}
-                          ; eqrel = record { rf' = λ f x → refl' B (f • x) 
-                                           ; sy' = λ f g p x → sym' {B} (p x) 
+                          ; eqrel = record { rf' = λ f x → refl' B (f • x)
+                                           ; sy' = λ f g p x → sym' {B} (p x)
                                            ; tr' = λ f g h p q x → tra' {B} (p x) (q x) }
                          }
 
 _=>01_ : setoid -> classoid -> classoid
 A =>01 B = setoidmaps1 A B
 
-extensionality1 : {A : setoid} -> {B : classoid} -> (f : ||| A =>01 B |||) -> (x y : || A ||) -> 
+extensionality1 : {A : setoid} -> {B : classoid} -> (f : ||| A =>01 B |||) -> (x y : || A ||) ->
              (< A > x ~ y) ->  (<< B >> (f • x) ~ (f • y))
 extensionality1 {A} {B} f x y p = (setoidmap1.ext f x y) p
 
@@ -607,11 +607,11 @@ is-injective1 {A} {B} f = (x y : || A ||) -> (<< B >> (f • x) ~ (f • y)) -> 
 
 
 comp1 : {A B : setoid} -> {C : classoid} -> (f : setoidmap1 B C) -> (g : || A => B ||) -> setoidmap1 A C
-comp1 {A} {B} {C} f g =  record { op =   (\x -> ap1 f (ap g x)) 
-                                ; ext = λ x y p → setoidmap1.ext f (ap g x) (ap g y) 
+comp1 {A} {B} {C} f g =  record { op =   (\x -> ap1 f (ap g x))
+                                ; ext = λ x y p → setoidmap1.ext f (ap g x) (ap g y)
                                                                     (setoidmap.ext g x y p)
                                }
-        
+
 
 
 record setoidmap11 (A B : classoid) : Set1 where
@@ -623,22 +623,21 @@ ap11 : {A B : classoid} -> (f : setoidmap11 A B) -> (a : ||| A  |||) -> ||| B ||
 ap11 f a = setoidmap11.op f a
 
 
-extensionality11 : {A B : classoid} -> (f : setoidmap11 A B) -> (x y : ||| A |||) -> 
+extensionality11 : {A B : classoid} -> (f : setoidmap11 A B) -> (x y : ||| A |||) ->
              (<< A >> x ~ y) ->  (<< B >> (ap11 f x) ~ (ap11 f  y))
 extensionality11 {A} {B} f x y p = (setoidmap11.ext f x y) p
 
 
 
 comp11 : {A B C : classoid} -> (f : setoidmap11 B C) -> (g : setoidmap11 A B) -> setoidmap11 A C
-comp11 {A} {B} {C} f g =  record { op =   (\x -> ap11 f (ap11 g x)) 
-                                ; ext = λ x y p → setoidmap11.ext f (ap11 g x) (ap11 g y) 
+comp11 {A} {B} {C} f g =  record { op =   (\x -> ap11 f (ap11 g x))
+                                ; ext = λ x y p → setoidmap11.ext f (ap11 g x) (ap11 g y)
                                                                     (setoidmap11.ext g x y p)
                                }
 
 comp01 : {A : setoid} -> {B C : classoid} -> (f : setoidmap11 B C) -> (g : setoidmap1 A B) -> setoidmap1 A C
-comp01 {A} {B} {C} f g =  record { op =   (\x -> ap11 f (ap1 g x)) 
-                                ; ext = λ x y p → setoidmap11.ext f (ap1 g x) (ap1 g y) 
+comp01 {A} {B} {C} f g =  record { op =   (\x -> ap11 f (ap1 g x))
+                                ; ext = λ x y p → setoidmap11.ext f (ap1 g x) (ap1 g y)
                                                                     (setoidmap1.ext g x y p)
                                }
-
 

@@ -42,7 +42,7 @@ quot : {Γ : ctx}
    -> (a : raw Γ)
    -> (p : Γ ==> a :: A)
    -> raw Γ
-quot {Γ} A R a p = {!!}  
+quot {Γ} A R a p = {!!}
 
 Quot-i : {Γ : ctx}
    -> (A : ty Γ)
@@ -65,7 +65,7 @@ els2-lm :  {Γ : ctx}
     -> {a  : raw Γ}
     -> (p : Γ ==> a :: A)
     -> Γ ==> A == (A [[ ↓ A ]]) [[ els p ]]
-els2-lm {Γ} {A} {a} p = {!!} 
+els2-lm {Γ} {A} {a} p = {!!}
 
 els2 : {Γ : ctx}
     -> {A : ty Γ}
@@ -77,17 +77,17 @@ els2 {Γ} {A} {a} {a'} p p' = ext  (A [[ ↓ A ]]) (els p) a' (elttyeq p' (els2
 
 {--
 
-elttyeq :  {Γ : ctx} ->  {a : raw Γ}  -> {A B : ty Γ} 
+elttyeq :  {Γ : ctx} ->  {a : raw Γ}  -> {A B : ty Γ}
 --
-      -> Γ ==> a :: A     -> Γ ==> A == B 
+      -> Γ ==> a :: A     -> Γ ==> A == B
 --  --------------------------------------------
               -> Γ ==> a :: B
 
-ext : {Δ Γ : ctx} -> (A : ty Γ) 
-      ->  (f : subst Δ Γ) -> (a : raw Δ) 
+ext : {Δ Γ : ctx} -> (A : ty Γ)
+      ->  (f : subst Δ Γ) -> (a : raw Δ)
       -> Δ ==> a :: A [[ f ]]
       -> subst Δ (Γ ▷ A)
-ext {Δ} {Γ} A f a p = subst.sb (record { op = ext-op A f a p 
+ext {Δ} {Γ} A f a p = sb (record { op = ext-op A f a p
                                        ; ext = ext-ext A f a p })
 --}
 
@@ -110,7 +110,7 @@ Quot-ID-exd : {Γ : ctx}
    -> (p' : Γ ==> a' :: A)
    -> (r : raw Γ)
    -> (q : Γ ==> r :: R [[ els2 p p' ]])
-   -> Γ ==> omicron {Γ} A R a a' p p' r q 
+   -> Γ ==> omicron {Γ} A R a a' p p' r q
         :: ID (Quot {Γ} A R) (quot {Γ} A R a p) (Quot-i {Γ} A R a p)
                              (quot {Γ} A R a' p') (Quot-i {Γ} A R a' p')
 Quot-ID-exd {Γ} A R a a' p p' r q = {!!}
@@ -130,12 +130,12 @@ QE-op : {Γ : ctx}
        -> (p : Γ ▷ A ==> d :: P [[ quot-subst A R ]])
        -> (e : raw (Γ ▷ A ▷ (A [[ ↓ A ]]) ▷ R))
        -- need transport here
-       -> (q : Γ ▷ A ▷ (A [[ ↓ A ]]) ▷ R ==> 
+       -> (q : Γ ▷ A ▷ (A [[ ↓ A ]]) ▷ R ==>
                  e :: ID (P [[ quot-subst A R ]] [[ ↓ (A [[ ↓ A ]]) ]] [[ ↓ R ]] )
                         ( d  [ ↓ (A [[ ↓ A ]]) ] [ ↓ R ] ) {!!} {!!} {!!})
        -> (c : raw Γ)
        -> (r : Γ ==> c :: (Quot {Γ} A R))
-       -> raw Γ 
+       -> raw Γ
 QE-op = {!!}
 
 Quot-e  : {Γ : ctx}
@@ -150,4 +150,3 @@ Quot-e  : {Γ : ctx}
        -> (r : Γ ==> c :: (Quot {Γ} A R))
        -> Γ ==> QE-op {Γ} A R P d p e q c r :: P [[ els r ]]
 Quot-e = {!!}
-

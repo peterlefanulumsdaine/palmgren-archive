@@ -18,8 +18,8 @@ data tc  (A : Set) (R : A -> A -> Set) :  (A -> A -> Set) where
 
 
 
-tc-is-transitive : (A : Set) -> (R : A -> A -> Set) -> 
-         (x y z : A) -> tc A R x y -> tc A R y z  -> tc A R x z 
+tc-is-transitive : (A : Set) -> (R : A -> A -> Set) ->
+         (x y z : A) -> tc A R x y -> tc A R y z  -> tc A R x z
 tc-is-transitive A R x y z p (base a b q) = extend x y z p q
 tc-is-transitive A R x y z p (extend a b c q r) = extend _ _ _ (tc-is-transitive A R _ _ _ p q) r
 
@@ -27,22 +27,22 @@ tc-transitive : (A : Set) -> (R : A -> A -> Set) -> transitive A (tc A R)
 tc-transitive A R = tc-is-transitive A R
 
 
-tc-smallest : (A : Set) -> (R : A -> A -> Set) 
-             -> (S : A -> A -> Set) 
+tc-smallest : (A : Set) -> (R : A -> A -> Set)
+             -> (S : A -> A -> Set)
              -> ((x y : A) -> R x y -> S x y)
              -> transitive A S
              -> ((x y : A) -> tc A R x y -> S x y)
 tc-smallest A R S p q x y (base a b r) = p x y r
-tc-smallest A R S p q x y (extend a b c t r) = 
+tc-smallest A R S p q x y (extend a b c t r) =
     let lm : S x b
-        lm = tc-smallest A R S p q x b t 
+        lm = tc-smallest A R S p q x b t
         main : S x y
         main = q x b y lm (p b y r)
     in main
 
 tc-symmetry-lm : (A : Set) -> (R : A -> A -> Set) -> (symmetric A R) -> (symmetric A (tc A R))
 tc-symmetry-lm A R p x y (base a b q) = base y x (p x y q)
-tc-symmetry-lm A R p x y (extend a b c q r) = 
+tc-symmetry-lm A R p x y (extend a b c q r) =
     let ih : tc A R b x
         ih = tc-symmetry-lm A R p x b q
         lm : tc A R y b
@@ -62,9 +62,9 @@ symmetrize-lm2 : (A : Set) -> (R : A -> A -> Set) ->
             ((x y : A) -> R x y -> symmetrize A R x y)
 symmetrize-lm2 A R x y p = inl p
 
-symmetrize-lm3 : (A : Set) 
-            -> (R : A -> A -> Set) 
-            -> (S : A -> A -> Set) 
+symmetrize-lm3 : (A : Set)
+            -> (R : A -> A -> Set)
+            -> (S : A -> A -> Set)
             -> (symmetric A S)
             -> ((x y : A) -> R x y -> S x y)
             -> ((x y : A) -> symmetrize A R x y -> S x y)
@@ -84,50 +84,50 @@ per-is-per A R = pair (tc-symmetry-lm A (symmetrize A R) (symmetrize-lm1 A R)) (
 
 -- per A R  is the smallest partial equivalence relation extending R
 
-per-is-smallest :  (A : Set) 
-             -> (R : A -> A -> Set) 
-             -> (S : A -> A -> Set) 
+per-is-smallest :  (A : Set)
+             -> (R : A -> A -> Set)
+             -> (S : A -> A -> Set)
              -> ((x y : A) -> R x y -> S x y)
              -> is-per A S
              -> ((x y : A) -> per A R x y -> S x y)
-per-is-smallest A R S p q x y r = 
+per-is-smallest A R S p q x y r =
    let  -- per A R =  tc A (symmetrize A R)
        lm : (x y : A) -> symmetrize A R x y -> S x y
        lm = symmetrize-lm3 A R S (prj1 q) p
        main : S x y
-       main = tc-smallest A (symmetrize A R) S lm (prj2 q) x y r 
+       main = tc-smallest A (symmetrize A R) S lm (prj2 q) x y r
    in main
-   
+
 -- if R is reflexive, then  per A R  is the smallest equivalence relation extending R
- 
-per-eqrel-lm1 :  (A : Set) 
-             -> (R : A -> A -> Set) 
+
+per-eqrel-lm1 :  (A : Set)
+             -> (R : A -> A -> Set)
              -> ((x : A) -> R x x)
              -> Eqrel A (per A R)
-per-eqrel-lm1  A R p = pair (λ x → base x x (inl (p x))) (per-is-per A R)   
+per-eqrel-lm1  A R p = pair (λ x → base x x (inl (p x))) (per-is-per A R)
 
-per-eqrel-lm2 :  (A : Set) 
-             -> (R : A -> A -> Set) 
+per-eqrel-lm2 :  (A : Set)
+             -> (R : A -> A -> Set)
              -> ((x : A) -> R x x)
-             -> (S : A -> A -> Set) 
+             -> (S : A -> A -> Set)
              -> ((x y : A) -> R x y -> S x y)
              -> Eqrel A S
              -> ((x y : A) -> per A R x y -> S x y)
-per-eqrel-lm2 A R p S q r x y = per-is-smallest A R S q (pair (prj1 (prj2 r)) (prj2 (prj2 r))) x y 
+per-eqrel-lm2 A R p S q r x y = per-is-smallest A R S q (pair (prj1 (prj2 r)) (prj2 (prj2 r))) x y
 
 
--- 
+--
 
 binrel-is-extensional : (A B : setoid) -> (R :  || A ||  -> || B || -> Set) -> Set
-binrel-is-extensional A B R = (x x' :  || A ||) -> (y y' :  || B ||) 
-                          -> < A > x ~ x' -> < B > y ~ y' -> R x y -> R x' y' 
+binrel-is-extensional A B R = (x x' :  || A ||) -> (y y' :  || B ||)
+                          -> < A > x ~ x' -> < B > y ~ y' -> R x y -> R x' y'
 
 
-tc-preserves-extensionality : (A : setoid) -> (R : || A || -> || A || -> Set) 
-         -> (binrel-is-extensional A A R) 
+tc-preserves-extensionality : (A : setoid) -> (R : || A || -> || A || -> Set)
+         -> (binrel-is-extensional A A R)
          -> binrel-is-extensional A  A (tc (|| A ||) R)
 tc-preserves-extensionality A R p x x' y y' q r (base a b t) = base x' y' (p _ _ _ _ q r t)
-tc-preserves-extensionality A R p x x' y y' q r (extend a b c t t') = 
+tc-preserves-extensionality A R p x x' y y' q r (extend a b c t t') =
    let ih : tc || A || R x' b
        ih = tc-preserves-extensionality A R p x x' b b q (refl A b) t
        t'' : R b y'
@@ -136,9 +136,9 @@ tc-preserves-extensionality A R p x x' y y' q r (extend a b c t t') =
        main = extend _ _ _ ih t''
    in main
 
- 
-symmetrize-preserves-extensionality : (A : setoid) -> (R : || A || -> || A || -> Set) 
-         -> (binrel-is-extensional A A R) 
+
+symmetrize-preserves-extensionality : (A : setoid) -> (R : || A || -> || A || -> Set)
+         -> (binrel-is-extensional A A R)
          -> binrel-is-extensional A  A (symmetrize (|| A ||) R)
 symmetrize-preserves-extensionality A R p x x' y y' q1 q2 (inl r) = inl (p _ _ _ _ q1 q2 r)
 symmetrize-preserves-extensionality A R p x x' y y' q1 q2 (inr r) = inr (p _ _ _ _ q2 q1 r)
