@@ -28,9 +28,9 @@ open import V-model-pt6         -- 842 lines
 open import V-model-pt7         --  66 lines
 open import V-model-pt8         -- 134 lines
 open import V-model-pt9         -- 441 lines
-open import V-model-pt10
-open import V-model-pt13
-
+open import V-model-pt10  
+open import V-model-pt13         
+                     
 -- universe operator
 
 -- experimental version of the universe axiom
@@ -53,19 +53,19 @@ T-n-Russell-eq :  {Γ : ctx}  -> (I : ty Γ) -> (F : ty (Γ ▷ I)) -> (A : raw 
 T-n-Russell-eq {Γ} I F A p = {!!}
 
 
-U-n-ix : {Γ : ctx}  -> (I : ty Γ) -> (F : ty (Γ ▷ I))
+U-n-ix : {Γ : ctx}  -> (I : ty Γ) -> (F : ty (Γ ▷ I)) 
 -- ------------------------------
      -> (Γ ==> I :: U-n Γ I F)
 --
-U-n-ix {Γ} i F = {!!}
+U-n-ix {Γ} i F = {!!} 
 
 U-n-fm : {Γ : ctx}  -> (I : ty Γ) -> (F : ty (Γ ▷ I))
---
+-- 
      -> (i : raw Γ)
      -> (p : Γ ==> i :: I)
 -- -------------------------------------
      -> (Γ ==> F [ els p ] :: U-n Γ I F)
-U-n-fm {Γ} i F = {!!}
+U-n-fm {Γ} i F = {!!} 
 
 
 -- constant type
@@ -93,12 +93,12 @@ U-f-sub Δ Γ f = mk-eqty (λ x → <<>> (refV _))
 
 
 natU : (Γ : ctx) -> raw Γ
-natU Γ = mkraw (record { op = λ x → natV
-                       ; ext = λ x y p → refl' _ _
+natU Γ = mkraw (record { op = λ x → natV 
+                       ; ext = λ x y p → refl' _ _  
                        })
 
 
-U-f-nat : (Γ : ctx)
+U-f-nat : (Γ : ctx) 
 -- -----------------------------------
     -> Γ ==> natU Γ :: U-f Γ
 --
@@ -108,14 +108,14 @@ T-f-nat : (Γ : ctx)
 -- ------------------------------------------------------
       -> Γ ==> T-f (natU Γ) (U-f-nat Γ) == Nat Γ
 --
-T-f-nat Γ = mk-eqty (λ x → <<>> (traV (easy-eqV _ _ _ (λ y → symV (nat-sV-V y))) emb-nat))
+T-f-nat Γ = mk-eqty (λ x → <<>> (traV (easy-eqV _ _ _ (λ y → symV (nat-sV-V y))) emb-nat)) 
 
 
-U-f-Russell-nat : (Γ : ctx)
+U-f-Russell-nat : (Γ : ctx) 
 -- -----------------------------------
     -> Γ ==> Nat Γ :: U-f Γ
 --
-U-f-Russell-nat Γ = mk-elt (λ x → natV-in-uV)
+U-f-Russell-nat Γ = mk-elt (λ x → natV-in-uV)  
 
 
 {--
@@ -128,40 +128,40 @@ natV-in-uV = nat-sV , symV emb-nat
 -- sigma-sV
 
 
-U-f-Russell-sigma-lm : {Γ : ctx}
-    ->  (A : ty Γ)
+U-f-Russell-sigma-lm : {Γ : ctx} 
+    ->  (A : ty Γ) 
     ->  (p : Γ ==> A :: U-f Γ)
     ->  (B : ty (Γ ▷ A))
     ->  (q : (Γ ▷ A) ==> B :: U-f Γ [[ ↓ A ]])
     ->  (x :  || κ Γ ||)
     ->  apr (Σ-f A B) x ∈ uV
-U-f-Russell-sigma-lm {Γ} A p B q x =
+U-f-Russell-sigma-lm {Γ} A p B q x = 
   let lm : (apt (Σ-f A B) x) ≐ sigmaV (apt A x) (mk-Par-op-Fx A B x)
       lm = Σ-f-exp1 {Γ} A B x
       lm2 : sigmaV (apt A x) (mk-Par-op-Fx A B x) ∈ uV
-      lm2 = sigmaV-reflection (apt A x) (mk-Par-op-Fx A B x)
+      lm2 = sigmaV-reflection (apt A x) (mk-Par-op-Fx A B x) 
                   (apel p x) (λ y → apel q (x , y))
       main : apr (Σ-f A B) x ∈ uV
       main = memV-left-ext (apr (Σ-f A B) x)  _ uV  lm lm2
   in main
 
-U-f-Russell-sigma : {Γ : ctx}
-    ->  (A : ty Γ)
+U-f-Russell-sigma : {Γ : ctx} 
+    ->  (A : ty Γ) 
     ->  (p : Γ ==> A :: U-f Γ)
     ->  (B : ty (Γ ▷ A))
     ->  (q : (Γ ▷ A) ==> B :: U-f Γ [[ ↓ A ]])
     ->  Γ ==> Σ-f A B :: U-f Γ
-U-f-Russell-sigma {Γ} A p B q
+U-f-Russell-sigma {Γ} A p B q  
     = mk-elt (U-f-Russell-sigma-lm {Γ} A p B q)
 
 {--
 
-sigmaV-reflection : (a : V) -> (g :  setoidmap1 (κ a) VV)
-    -> (a ∈ uV)
+sigmaV-reflection : (a : V) -> (g :  setoidmap1 (κ a) VV) 
+    -> (a ∈ uV) 
     -> ((x : || κ a ||) -> ap1 g x ∈ uV)
     -> sigmaV a g ∈ uV
 
-Σ-f-exp1 :  {Γ : ctx}
+Σ-f-exp1 :  {Γ : ctx} 
        -> (A : ty Γ)   -> (B : ty (Γ ▷ A))
        -> (u : || κ Γ ||)
        ->  (apt (Σ-f A B)  u) ≐ sigmaV (apt A u) (mk-Par-op-Fx A B u)
@@ -169,25 +169,25 @@ sigmaV-reflection : (a : V) -> (g :  setoidmap1 (κ a) VV)
 
 --}
 
-U-f-Russell-pi-lm : {Γ : ctx}
-    ->  (A : ty Γ)
+U-f-Russell-pi-lm : {Γ : ctx} 
+    ->  (A : ty Γ) 
     ->  (p : Γ ==> A :: U-f Γ)
     ->  (B : ty (Γ ▷ A))
     ->  (q : (Γ ▷ A) ==> B :: U-f Γ [[ ↓ A ]])
     ->  (x :  || κ Γ ||)
     ->  apr (Π-f A B) x ∈ uV
-U-f-Russell-pi-lm {Γ} A p B q x =
+U-f-Russell-pi-lm {Γ} A p B q x = 
   let lm : (apt (Π-f A B) x) ≐ piV (apt A x) (mk-Par-op-Fx A B x)
       lm = Π-f-exp1 {Γ} A B x
       lm2 : piV (apt A x) (mk-Par-op-Fx A B x) ∈ uV
-      lm2 = piV-reflection (apt A x) (mk-Par-op-Fx A B x)
+      lm2 = piV-reflection (apt A x) (mk-Par-op-Fx A B x) 
                   (apel p x) (λ y → apel q (x , y))
       main : apr (Π-f A B) x ∈ uV
       main = memV-left-ext (apr (Π-f A B) x)  _ uV  lm lm2
   in main
 
-U-f-Russell-pi : {Γ : ctx}
-    ->  (A : ty Γ)
+U-f-Russell-pi : {Γ : ctx} 
+    ->  (A : ty Γ) 
     ->  (p : Γ ==> A :: U-f Γ)
     ->  (B : ty (Γ ▷ A))
     ->  (q : (Γ ▷ A) ==> B :: U-f Γ [[ ↓ A ]])
@@ -230,7 +230,7 @@ U-f-Russell-ID : {Γ : ctx}
      -> (a : raw Γ)
      -> (qa : Γ ==> a :: A)
      -> (b : raw Γ)
-     -> (qb : Γ ==> b :: A)
+     -> (qb : Γ ==> b :: A)    
      -> Γ ==> ID A a qa b qb :: U-f Γ
 U-f-Russell-ID {Γ} A p a qa b qb = mk-elt (U-f-Russell-ID-lm {Γ} A p a qa b qb)
 
@@ -238,13 +238,13 @@ U-f-Russell-N0 : {Γ : ctx}
       -> Γ ==> N0 Γ :: U-f Γ
 U-f-Russell-N0 {Γ} = mk-elt (λ x →  zeroV-reflection)
 
-U-f-Russell-Sum-lm : {Γ : ctx}
-    ->  (A B : ty Γ)
+U-f-Russell-Sum-lm : {Γ : ctx} 
+    ->  (A B : ty Γ) 
     ->  (p : Γ ==> A :: U-f Γ)
     ->  (q : Γ ==> B :: U-f Γ)
     ->  (x :  || κ Γ ||)
     ->  apr (Sum A B) x ∈ uV
-U-f-Russell-Sum-lm {Γ} A B p q x =
+U-f-Russell-Sum-lm {Γ} A B p q x = 
   let  lm : (apt (Sum A B) x) ≐ sumV (apt A x) (apt B x)
        lm = refV _
        lm2 : sumV (apt A x) (apt B x) ∈ uV
@@ -253,10 +253,10 @@ U-f-Russell-Sum-lm {Γ} A B p q x =
        main = memV-left-ext (apr (Sum A B) x)  _ uV  lm lm2
   in main
 
-U-f-Russell-Sum : {Γ : ctx}
-    ->  (A B : ty Γ)
+U-f-Russell-Sum : {Γ : ctx} 
+    ->  (A B : ty Γ) 
     ->  (p : Γ ==> A :: U-f Γ)
     ->  (q : Γ ==> B :: U-f Γ)
     ->  Γ ==> Sum A B :: U-f Γ
-U-f-Russell-Sum {Γ} A B p q
+U-f-Russell-Sum {Γ} A B p q  
     = mk-elt (U-f-Russell-Sum-lm {Γ} A B p q)

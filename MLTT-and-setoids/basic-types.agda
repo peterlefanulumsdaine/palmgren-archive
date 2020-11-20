@@ -46,7 +46,7 @@ record prod (A B : Set) : Set where
     prj2 : B
 open prod public
 
-{-- the above record replaces:
+{-- the above record replaces: 
 
 data prod (A : Set) (B : Set) : Set where
    pair : A -> B -> prod A B
@@ -164,7 +164,7 @@ T : U -> Set
 T = To {N₀} {\x -> N₀}
 
 
-{-- nth Universe, internally indexed; see also notes by C McBride
+{-- nth Universe, internally indexed; see also notes by C McBride 
 "Dependently Typed Metaprogramming (in Agda)"  2013 --}
 
 data Setfam : Set1 where
@@ -182,7 +182,7 @@ Emptyfam = setfam N₀ (\x -> N₀)
 NextUT : Setfam -> Setfam
 NextUT F = setfam (Uo (ind F) (fam F)) (To {ind F} {fam F})
 
-nthUT : N -> Setfam
+nthUT : N -> Setfam 
 nthUT O = NextUT Emptyfam
 nthUT (s k) = NextUT (nthUT k)
 
@@ -198,7 +198,7 @@ nthT k = fam (nthUT k)
 
 
 
--- Axiom for forming families over a disjoint union
+-- Axiom for forming families over a disjoint union 
 -- provable for A B in U
 
 
@@ -223,7 +223,7 @@ Jrec A a b C d c =  J {A} {a} {b} {C} d c
 
 
 Isub : {A : Set} -> (P : A -> Set)  ->  {x y : A} -> (Id A x y) -> (P x) -> (P y)
-Isub {A} P {x} {y} p = Jrec A x y (\u -> \v -> \w -> (P u) -> (P v)) ((\v -> v)) p
+Isub {A} P {x} {y} p = Jrec A x y (\u -> \v -> \w -> (P u) -> (P v)) ((\v -> v)) p 
 
 Ifunext : {A  B : Set} -> (f : A -> B)  ->  {x y : A} -> (Id A x y) -> Id B (f x) (f y)
 Ifunext {A} {B} f {x} {y} p  = Jrec A x y (\x -> \y -> \z -> Id B (f x) (f y)) rf p
@@ -254,7 +254,7 @@ impE : {A : Set} -> {B : Set} -> (implies A B) -> A -> B
 impE f a = f a
 
 fun : (A : Set) -> (B : Set)  -> Set
-fun A B = A -> B
+fun A B = A -> B 
 
 all : (A : Set) -> (B : A -> Set) -> Set
 all A B = (x : A) -> B x
@@ -279,7 +279,7 @@ andR {A} {B} c = prj2 c
 exists : (A : Set) -> (B : A -> Set) -> Set
 exists A B =  Σ A B
 
-existsI : {A : Set} -> {B : A -> Set} ->
+existsI : {A : Set} -> {B : A -> Set} -> 
           (a : A) -> (b : B a) -> exists A B
 existsI a b = ( a , b )
 
@@ -296,7 +296,7 @@ orE : {A B : Set} -> {C : (or A B) -> Set}
    -> ((a : A) -> C (orL a)) -> ((b : B) -> C (orR b)) -> (c : or A B) -> C c
 orE = D
 
-orEweak : {A B C : Set}
+orEweak : {A B C : Set} 
    -> (A -> C) -> (B -> C)  -> (c : or A B) -> C
 orEweak f g (inl a) = f a
 orEweak f g (inr b) = g b
@@ -338,32 +338,32 @@ non-trivial-Bool = impI (λ p → Isub Val p tt)
 
 -- sums are disjoint.
 
-is-inl :  (A B : Set) -> (u : A + B) -> Bool
+is-inl :  (A B : Set) -> (u : A + B) -> Bool 
 is-inl A B u = D (\a -> true) (\b -> false) u
 
-is-inr :  (A B : Set) -> (u : A + B) -> Bool
+is-inr :  (A B : Set) -> (u : A + B) -> Bool 
 is-inr A B u = D (\a -> false) (\b -> true) u
 
-disjointness-sum :  (A B : Set) -> (a : A) -> (b : B)
+disjointness-sum :  (A B : Set) -> (a : A) -> (b : B) 
             -> not (Id (A + B) (inl a) (inr b))
 disjointness-sum A B a b = impI (λ p → impE non-trivial-Bool (Ifunext (is-inl A B) p))
 
-disjointness-sum2 :  (A B : Set) -> (a : A) -> (b : B)
+disjointness-sum2 :  (A B : Set) -> (a : A) -> (b : B) 
             -> not (Id (A + B) (inr b) (inl a))
 disjointness-sum2 A B a b = impI (λ p → impE non-trivial-Bool (Ifunext (is-inr A B) p))
 
 -- inl and inr are injective proved using code-encode of
--- p 85-86 in HoTT (but use  LD instead of full universe).
+-- p 85-86 in HoTT (but use  LD instead of full universe). 
 -- Vaguely seen this before. Wilander's paper?
 
-code-inl : (A B : Set) -> (a : A) -> (u : (A + B)) -> Set
+code-inl : (A B : Set) -> (a : A) -> (u : (A + B)) -> Set 
 code-inl A B a = (LD A B (\x -> Id A a x)  (\y -> False))
 
-code-inr : (A B : Set) -> (b : B) -> (u : (A + B)) -> Set
+code-inr : (A B : Set) -> (b : B) -> (u : (A + B)) -> Set 
 code-inr A B b = (LD A B (\x -> False)  (\y -> Id B b y))
 
 encode-inl :  (A B : Set) -> (a : A) -> (u : A + B) -> (Id (A + B) (inl a) u) -> (code-inl A B a u)
-encode-inl A B a u p  = Isub (code-inl A B a) p rf
+encode-inl A B a u p  = Isub (code-inl A B a) p rf 
 
 encode-inr :  (A B : Set) -> (b : B) -> (u : A + B) -> (Id (A + B) (inr b) u) -> (code-inr A B b u)
 encode-inr A B b u p  = Isub (code-inr A B b) p rf
@@ -376,7 +376,7 @@ inr-injective A B b d p = encode-inr A B b (inr d) p
 
 
 Isym : (A : Set) -> (x y : A) -> Id A x y -> Id A y x
-Isym A x y p = Jrec A x y ((\x -> \y ->  \z -> Id A y x)) rf p
+Isym A x y p = Jrec A x y ((\x -> \y ->  \z -> Id A y x)) rf p 
 
 Itra : (A : Set) -> (x y z : A) -> Id A x y -> Id A y z -> Id A x z
 Itra A x y z p q =  impE (Jrec A x y ((\u -> \v ->  \w -> implies (Id A v z) (Id A u z) ))
