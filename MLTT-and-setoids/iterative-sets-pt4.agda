@@ -21,7 +21,7 @@ open import iterative-sets-pt3
 -- encoded as 0, {0}, {{0}}, ...
 
 br-zeroV :  N₀ -> V
-br-zeroV () 
+br-zeroV ()
 
 zeroV : V
 zeroV = sup N₀ br-zeroV
@@ -31,8 +31,8 @@ supN1-lm : (f g : N₁ -> V) -> (f 0₁ ≐ g 0₁) -> (sup N₁ f) ≐ (sup N�
 supN1-lm f g p = easy-eqV  N₁ f g (λ x → R₁ {\y ->  f y ≐ g y } p x)
 
 
-supN1-lm-rev : (f g : N₁ -> V) -> (sup N₁ f) ≐ (sup N₁ g)  -> (f 0₁ ≐ g 0₁) 
-supN1-lm-rev f g p = 
+supN1-lm-rev : (f g : N₁ -> V) -> (sup N₁ f) ≐ (sup N₁ g)  -> (f 0₁ ≐ g 0₁)
+supN1-lm-rev f g p =
   let lm = eqV-expand (sup N₁ f) (sup N₁ g) p
       lm2 = prj1 lm 0₁
       lm3 = pj2 lm2
@@ -45,7 +45,7 @@ br-singV x  0₁ = x
 singV : V -> V
 singV x = sup N₁ (br-singV x)
 
-singV-ext : (x y : V) 
+singV-ext : (x y : V)
     -> x ≐ y -> singV x ≐ singV y
 singV-ext x y p = supN1-lm _ _ p
 
@@ -57,12 +57,12 @@ singV-inj x y p = supN1-lm-rev (br-singV x)  (br-singV y) p
 succV : V -> V
 succV x = singV x
 
-succV-ext : (x y : V) 
+succV-ext : (x y : V)
     -> x ≐ y -> succV x ≐ succV y
 succV-ext x y p = singV-ext x y p
 
-succV-inj : (x y : V) 
-   -> succV x ≐ succV y  -> x ≐ y 
+succV-inj : (x y : V)
+   -> succV x ≐ succV y  -> x ≐ y
 succV-inj x y p = singV-inj x y p
 
 Peano4 : (x : V)
@@ -91,21 +91,21 @@ succ-op x =   s x
 
 
 succ-fun : || κ natV  => κ natV ||
-succ-fun = record { op = succ-op 
+succ-fun = record { op = succ-op
                   ; ext = λ x y p → <> (succV-ext (nV x) (nV y) (>< p))
                   }
 
 succ-inj : (x y : || κ natV ||) -> (< κ natV > succ-op x ~ succ-op y) -> < κ natV > x ~  y
-succ-inj x y p = <> (succV-inj _ _ (>< p)) 
+succ-inj x y p = <> (succV-inj _ _ (>< p))
 
--- succV-inj : (x y : V) 
---   -> succV x ≐ succV y  -> x ≐ y 
+-- succV-inj : (x y : V)
+--   -> succV x ≐ succV y  -> x ≐ y
 
 eqN : N -> N -> Set
 eqN O O = True
-eqN O (s y)  = False 
+eqN O (s y)  = False
 eqN (s x) O = False
-eqN (s x) (s y) = eqN x y 
+eqN (s x) (s y) = eqN x y
 
 eqN-refl : (x : N) -> eqN x x
 eqN-refl O = 0₁
@@ -126,15 +126,15 @@ eqN-tra (s x) (s y) O p q = q
 eqN-tra (s x) (s y) (s z) p q = eqN-tra x y z p q
 
 N-std : setoid
-N-std = record { object = N 
-               ; _∼_ = eqN 
+N-std = record { object = N
+               ; _∼_ = eqN
                ; eqrel = pair eqN-refl (pair eqN-sym eqN-tra) }
 
 N-to-natV-ext : (x y : || N-std ||) -> < N-std > x ~ y  -> < κ natV > x ~ y
 N-to-natV-ext O O p = <> (refV _)
 N-to-natV-ext O (s y) p = exfalso _ (>< p)
 N-to-natV-ext (s x) O p = exfalso _ (>< p)
-N-to-natV-ext (s x) (s y) p =  
+N-to-natV-ext (s x) (s y) p =
     let lm : < N-std > x ~ y
         lm = <> (>< p)
         lm2 :  < κ natV > x ~ y
@@ -143,7 +143,7 @@ N-to-natV-ext (s x) (s y) p =
 
 
 N-to-natV : || N-std  => κ natV ||
-N-to-natV = record { op = λ x → x 
+N-to-natV = record { op = λ x → x
                    ; ext = N-to-natV-ext }
 
 natV-to-N-ext : (x y : || N-std ||)  -> < κ natV > x ~ y -> < N-std > x ~ y
@@ -155,26 +155,26 @@ natV-to-N-ext (s x) (s y) p =
         p' = succ-inj _ _ p
         lm :  < N-std > x ~ y
         lm = natV-to-N-ext x y p'
-    in <> (>< lm)  
+    in <> (>< lm)
 
 natV-to-N : || κ natV => N-std ||
-natV-to-N = record { op = λ x → x 
+natV-to-N = record { op = λ x → x
                    ; ext = natV-to-N-ext }
 
 
 N-isomorphism : N-std ≅ κ natV
-N-isomorphism = N-to-natV , (natV-to-N  , 
+N-isomorphism = N-to-natV , (natV-to-N  ,
                            (pair (λ x → refl (N-std) x ) (λ y → refl (κ natV) y )))
 
 preserve-0-natV-to-N  : < N-std > ap natV-to-N O ~ O
 preserve-0-natV-to-N  = refl (N-std) O
-preserve-s-natV-to-N : (x : || κ natV ||) 
+preserve-s-natV-to-N : (x : || κ natV ||)
      ->  < N-std > ap natV-to-N (succ-op x) ~ s (ap natV-to-N x)
 preserve-s-natV-to-N x = refl (N-std) _
 
 preserve-0-N-to-natV  : < κ natV > ap N-to-natV O ~ O
 preserve-0-N-to-natV  = refl (κ natV) O
-preserve-s-N-to-natV : (x : || N-std ||) 
+preserve-s-N-to-natV : (x : || N-std ||)
      ->  < κ natV > ap  N-to-natV (s x) ~ succ-op (ap N-to-natV x)
 preserve-s-N-to-natV x = refl (κ natV) _
 
@@ -184,7 +184,7 @@ preserve-s-N-to-natV x = refl (κ natV) _
 -- dependent recursion - what is the most natural formulation for V ?
 
 
-natV-rec : 
+natV-rec :
          (C : setoidmap1 (κ natV) VV)
       -> (d : || κ (ap1 C O) ||)
       -> (e : (m : || κ natV ||) -> (z :  || κ (ap1 C m) ||) ->  || κ (ap1 C (s m)) ||)
@@ -196,7 +196,7 @@ natV-rec :
 natV-rec C d e xt O = d
 natV-rec C d e xt (s m) = e m (natV-rec C d e xt m)
 
-natV-rec-ext : 
+natV-rec-ext :
          (C : setoidmap1 (κ natV) VV)
       -> (d : || κ (ap1 C O) ||)
       -> (e : (m : || κ natV ||) -> (z :  || κ (ap1 C m) ||) ->  || κ (ap1 C (s m)) ||)
@@ -209,12 +209,12 @@ natV-rec-ext :
 natV-rec-ext C d e xt O O         p = refV _
 natV-rec-ext C d e xt  O (s k)    p = exfalso _ (Peano4 (nV k) (symV (>< p)))
 natV-rec-ext C d e xt (s m) O     p = exfalso _ (Peano4 (nV m) (>< p))
-natV-rec-ext C d e xt (s m) (s k) p = 
-        xt m k (natV-rec C d e xt m) (natV-rec C d e xt k) 
+natV-rec-ext C d e xt (s m) (s k) p =
+        xt m k (natV-rec C d e xt m) (natV-rec C d e xt k)
                (succ-inj _ _ p) (natV-rec-ext C d e xt m k ((succ-inj _ _ p)))
 
 
-natV-rec-ext2 : 
+natV-rec-ext2 :
          (C C' : setoidmap1 (κ natV) VV)
       -> (d : || κ (ap1 C O) ||)
       -> (d' : || κ (ap1 C' O) ||)
@@ -239,6 +239,6 @@ natV-rec-ext2 C C' d d' e xt e' xt' O O          p1 p2 p3 = p2
 natV-rec-ext2 C C' d d' e xt e' xt' (s m) O      p1 p2 p3 = exfalso _ (Peano4 (nV m) (>< p1))
 natV-rec-ext2 C C' d d' e xt e' xt' O (s m')     p1 p2 p3 = exfalso _ (Peano4 (nV m') (symV (>< p1)))
 natV-rec-ext2 C C' d d' e xt e' xt' (s m) (s m') p1 p2 p3 =
-      p3 m m' (natV-rec C d e xt m) (natV-rec C' d' e' xt' m') (succ-inj _ _ p1) 
+      p3 m m' (natV-rec C d e xt m) (natV-rec C' d' e' xt' m') (succ-inj _ _ p1)
                   (natV-rec-ext2 C C' d d' e xt e' xt' m m' (succ-inj _ _ p1) p2 p3)
-  
+

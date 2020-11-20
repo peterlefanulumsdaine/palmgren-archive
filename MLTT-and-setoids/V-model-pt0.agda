@@ -33,10 +33,10 @@ ctx = V
 
 -- Every set a in V gives rise to a canonical setoid  κ a.
 -- See previous files.
--- The context maps are extensional functions between 
+-- The context maps are extensional functions between
 -- such canonical setoids.
 
-ctx-maps : (a b : ctx) -> setoid 
+ctx-maps : (a b : ctx) -> setoid
 ctx-maps a b = (κ a => κ b)
 
 ctx-trp :  {a b : ctx} -> (p : a ≐ b) -> || ctx-maps a b ||
@@ -55,8 +55,8 @@ record subst (a b : ctx ) : Set where
 Subst : (a b : ctx) -> setoid
 Subst a b = record {object = subst a b
                    ;  _∼_ = \f -> \g -> < ctx-maps a b > subst.cmap f ~ subst.cmap g
-                   ; eqrel = pair (λ f -> <> (\ x → refl (κ b) _)) 
-                                  (pair (λ f g p -> <> (\ x → sym {κ b} ((>< p) x))) 
+                   ; eqrel = pair (λ f -> <> (\ x → refl (κ b) _))
+                                  (pair (λ f g p -> <> (\ x → sym {κ b} ((>< p) x)))
                                         (λ f g h p q -> <> (\ x → tra {κ b} ((>< p) x) ((>< q) x))))
                    }
 
@@ -65,7 +65,7 @@ Subst a b = record {object = subst a b
 aps : {a b : ctx} -> (f : subst a b) -> (x : || κ a ||) -> || κ b ||
 aps f x = (ap (subst.cmap f) x)
 
-aps-ext : {a b : ctx} -> (f : subst a b) -> (x y : || κ a ||) 
+aps-ext : {a b : ctx} -> (f : subst a b) -> (x y : || κ a ||)
               -> < κ a > x ~ y -> < κ b > aps f x ~ aps f y
 aps-ext {a} {b} f x y p = extensionality (subst.cmap f) x y p
 
@@ -86,18 +86,18 @@ f ⌢ g = subst.sb (subst.cmap f ° subst.cmap g)
 
 
 
-subst-cong : {Θ Δ Γ : ctx} -> (f f' : subst Δ Γ) -> (g  g' : subst Θ Δ) 
-      -> < Subst Δ Γ > f ~ f' 
-      -> < Subst Θ Δ > g ~ g' 
-      -> < Subst Θ Γ > (f ⌢ g) ~ (f' ⌢ g') 
+subst-cong : {Θ Δ Γ : ctx} -> (f f' : subst Δ Γ) -> (g  g' : subst Θ Δ)
+      -> < Subst Δ Γ > f ~ f'
+      -> < Subst Θ Δ > g ~ g'
+      -> < Subst Θ Γ > (f ⌢ g) ~ (f' ⌢ g')
 subst-cong {Θ} {Δ} {Γ} f f' g g' p q =
-    <> (<> (λ x →  
+    <> (<> (λ x →
    let eq1 : < κ Γ > setoidmap.op (subst.cmap f ° subst.cmap g) x ~
-                     setoidmap.op (subst.cmap f ° subst.cmap g' ) x 
-       eq1 = extensionality (subst.cmap f) _ _ ((>< (>< q) x)) 
+                     setoidmap.op (subst.cmap f ° subst.cmap g' ) x
+       eq1 = extensionality (subst.cmap f) _ _ ((>< (>< q) x))
        eq2 : < κ Γ > setoidmap.op (subst.cmap f ° subst.cmap g' ) x ~
                     setoidmap.op (subst.cmap (f') ° subst.cmap (g')) x
-       eq2 = >< (>< p) ( aps g' x) 
+       eq2 = >< (>< p) ( aps g' x)
        eq : < κ Γ > setoidmap.op (subst.cmap f ° subst.cmap g) x ~
                     setoidmap.op (subst.cmap (f') ° subst.cmap (g')) x
        eq = tra eq1 eq2
@@ -121,10 +121,10 @@ apr {Γ} a x = (raw.rawterm a) • x
 Raw : (Γ : ctx) -> classoid
 Raw Γ = record {object = raw Γ
                ;  _∼_ = \a -> \b -> << setoidmaps1 (κ Γ) VV >> (raw.rawterm a) ~ (raw.rawterm b)
-               ; eqrel = record { rf' = λ x → <<>> (λ t → <<>> (refV _)) 
-                                ; sy' = λ x y p → <<>> (λ t → <<>> (symV (>><< (>><< p t))))  
-                                ; tr' =  λ x y z p q → <<>> (λ t → <<>> (traV ((>><< (>><< p t))) ((>><< (>><< q t))))) 
-                                } 
+               ; eqrel = record { rf' = λ x → <<>> (λ t → <<>> (refV _))
+                                ; sy' = λ x y p → <<>> (λ t → <<>> (symV (>><< (>><< p t))))
+                                ; tr' =  λ x y z p q → <<>> (λ t → <<>> (traV ((>><< (>><< p t))) ((>><< (>><< q t)))))
+                                }
                }
 
 
@@ -137,7 +137,7 @@ Raw Γ = record {object = raw Γ
 record ty (Γ : ctx) : Set1 where
   constructor tyy
   field
-    type : ||| setoidmaps1 (κ Γ) VV  ||| 
+    type : ||| setoidmaps1 (κ Γ) VV  |||
 --}
 
 {-- New version trying to making it synonymous (thanks to Guillaum Brunerie) :
@@ -170,10 +170,10 @@ apt {Γ} A x = (ty.type A) • x
 Ty : (Γ : ctx) -> classoid
 Ty Γ =  record {object = ty Γ
                ;  _∼_ = \A -> \B -> << setoidmaps1 (κ Γ) VV >> (ty.type A) ~ (ty.type B)
-               ; eqrel = record { rf' = λ x → <<>> (λ t → <<>> (refV _)) 
-                                ; sy' = λ x y p → <<>> (λ t → <<>> (symV (>><< (>><< p t))))   
-                                ; tr' = λ x y z p q → <<>> (λ t → <<>> (traV ((>><< (>><< p t))) ((>><< (>><< q t))))) 
-                                } 
+               ; eqrel = record { rf' = λ x → <<>> (λ t → <<>> (refV _))
+                                ; sy' = λ x y p → <<>> (λ t → <<>> (symV (>><< (>><< p t))))
+                                ; tr' = λ x y z p q → <<>> (λ t → <<>> (traV ((>><< (>><< p t))) ((>><< (>><< q t)))))
+                                }
                }
 
 
@@ -188,17 +188,17 @@ record tm (Γ : ctx) (A : ty Γ) : Set1 where
 
 -- Definition of interpretation of the type-theoretic judgements
 --  Γ context
---  Γ ==> A type  
+--  Γ ==> A type
 --  Γ ==> A == B
 --  Γ ==> a :: A
---  Γ ==> a == b :: A 
+--  Γ ==> a == b :: A
 
 -- (make all these into records just as subst to improve inference of hidden variables?)
 
---  Γ context 
+--  Γ context
 --  is just  Γ : ctx
 
---   Γ ==> A type 
+--   Γ ==> A type
 --  is just  A : ty Γ
 
 --  Γ ==> A == B
@@ -226,18 +226,18 @@ record _==>_::_ (Γ : ctx) (a : raw Γ) (A : ty Γ) : Set where
  field
    judge-elt : (x : || κ Γ ||) ->  (apr a x) ∈ (apt A x)
 
-apel :  {Γ : ctx} -> {a : raw Γ} -> {A : ty Γ} 
+apel :  {Γ : ctx} -> {a : raw Γ} -> {A : ty Γ}
         -> (p : Γ ==> a :: A) ->  (u : || κ Γ ||)
         ->  (apr a u) ∈ (apt A u)
 apel p u =  _==>_::_.judge-elt p u
 
---  Γ ==> a == b :: A 
+--  Γ ==> a == b :: A
 
 infix 10  _==>_==_::_
 
 _==>_==_::_ : (Γ : ctx) -> (a b : raw Γ) -> (A : ty Γ) -> Set
 Γ ==> a == b :: A = and ((x : || κ Γ ||) -> (apr a x) ≐ (apr b x)) -- should be raw equality, but size issues
-                        (and (Γ ==> a :: A) (Γ ==> b :: A)) 
+                        (and (Γ ==> a :: A) (Γ ==> b :: A))
 
 
 Raw-lm  : {Γ : ctx} -> {a b : raw Γ}
@@ -254,40 +254,40 @@ Raw-lm2 {Γ} {a} {b} p = <<>> (<<>> (λ x → <<>> (p x)))
 -- Verification of general rules for the type and element equality
 
 
-tyrefl :  {Γ : ctx} 
+tyrefl :  {Γ : ctx}
 --
-         -> (A : ty Γ) 
+         -> (A : ty Γ)
 -- ------------------------
          -> Γ ==> A == A
 --
-tyrefl A = mk-eqty (λ x → refl' _ _) 
+tyrefl A = mk-eqty (λ x → refl' _ _)
 
 
 
-tysym :  {Γ : ctx} -> {A B : ty Γ} 
+tysym :  {Γ : ctx} -> {A B : ty Γ}
 --
-         -> Γ ==> A == B 
---   -------------------------- 
+         -> Γ ==> A == B
+--   --------------------------
          -> Γ ==> B == A
 --
-tysym {A} {B} p = mk-eqty (λ x → sym'  (ape p x)) 
+tysym {A} {B} p = mk-eqty (λ x → sym'  (ape p x))
 
 
 
-tytra :  {Γ : ctx} -> {A B C : ty Γ} 
+tytra :  {Γ : ctx} -> {A B C : ty Γ}
 --
-         -> Γ ==> A == B  -> Γ ==> B == C 
+         -> Γ ==> A == B  -> Γ ==> B == C
 --  -------------------------------------
                 -> Γ ==> A == C
 --
-tytra {A} {B} {C} p q = mk-eqty (λ x → tra' (ape p x) (ape q x)) 
+tytra {A} {B} {C} p q = mk-eqty (λ x → tra' (ape p x) (ape q x))
 
 
 
 
 tmrefl :  {Γ : ctx} -> {A : ty Γ}-> {a : raw Γ}
 --
-         -> Γ ==> a :: A  
+         -> Γ ==> a :: A
 --    ------------------------
          -> Γ ==> a == a :: A
 --
@@ -295,17 +295,17 @@ tmrefl p = pair (λ x → refV _) (pair p p)
 
 
 
-tmsym :  {Γ : ctx} -> (A : ty Γ) -> (a b : raw Γ) 
+tmsym :  {Γ : ctx} -> (A : ty Γ) -> (a b : raw Γ)
 --
-         -> Γ ==> a == b :: A 
+         -> Γ ==> a == b :: A
 --    ------------------------
          -> Γ ==> b == a :: A
 --
 tmsym A a b p = pair (λ x → symV (prj1 p x)) (pair (prj2 (prj2 p)) (prj1 (prj2 p)))
 
-tmtra :  {Γ : ctx} -> (A : ty Γ) -> (a b c : raw Γ) 
+tmtra :  {Γ : ctx} -> (A : ty Γ) -> (a b c : raw Γ)
 --
-         -> Γ ==> a == b :: A   -> Γ ==> b == c :: A 
+         -> Γ ==> a == b :: A   -> Γ ==> b == c :: A
 --  --------------------------------------------------
          -> Γ ==> a == c :: A
 --
@@ -317,55 +317,55 @@ tmtra A a b c p q = pair (λ x → traV (prj1 p x) (prj1 q x)) (pair (prj1 (prj2
 
 -- The crucial type equality is verified
 
-elttyeq :  {Γ : ctx} ->  {a : raw Γ}  -> {A B : ty Γ} 
+elttyeq :  {Γ : ctx} ->  {a : raw Γ}  -> {A B : ty Γ}
 --
-      -> Γ ==> a :: A     -> Γ ==> A == B 
+      -> Γ ==> a :: A     -> Γ ==> A == B
 --  --------------------------------------------
               -> Γ ==> a :: B
 --
-elttyeq {Γ} {a} {A} {B} p q =  
+elttyeq {Γ} {a} {A} {B} p q =
     mk-elt (λ x → (e+ (>><< (ape q x)) (pj1 (apel p x))) , traV (pj2 (apel p x)) (e+prop (>><< (ape q x)) (pj1 (apel p x))) )
 
 
 
--- some auxiliary lemmas  
+-- some auxiliary lemmas
 
-pj1elttyeq :  {Γ : ctx} ->  {a : raw Γ}  -> {A B : ty Γ} 
+pj1elttyeq :  {Γ : ctx} ->  {a : raw Γ}  -> {A B : ty Γ}
 --
-      -> Γ ==> a :: A     -> Γ ==> A == B 
+      -> Γ ==> a :: A     -> Γ ==> A == B
       -> (x : || κ Γ ||)
       ->  || κ (apt B x) ||
 pj1elttyeq {Γ} {a} {A} {B} p q x = e+ (>><< (ape q x)) (pj1 (apel p x))
 
 
 
-elttyeq-lm :  {Γ : ctx} ->  {a : raw Γ}  -> {A B : ty Γ} 
-      -> (p : Γ ==> a :: A)     -> (q : Γ ==> A == B)  
-      -> (x : || κ Γ ||)     
+elttyeq-lm :  {Γ : ctx} ->  {a : raw Γ}  -> {A B : ty Γ}
+      -> (p : Γ ==> a :: A)     -> (q : Γ ==> A == B)
+      -> (x : || κ Γ ||)
       ->  (apr a x) ≐ (apt B x) ‣  (pj1elttyeq p q x) -- (pj1  (apel (elttyeq p q) x))
 elttyeq-lm {Γ} {a} {A} {B} p q x = memV-right-ext-lm2 (apr a x) (apt A x) (apt B x) (apel p x) (>><< (ape q x))
 
 
-elttyeq-lm2 :  {Γ : ctx} ->  {a : raw Γ}  -> {A B : ty Γ} 
-      -> (p : Γ ==> a :: A)     -> (q : Γ ==> A == B)  
-      -> (x : || κ Γ ||)     
+elttyeq-lm2 :  {Γ : ctx} ->  {a : raw Γ}  -> {A B : ty Γ}
+      -> (p : Γ ==> a :: A)     -> (q : Γ ==> A == B)
+      -> (x : || κ Γ ||)
       ->  (apr a x) ≐ (apt B x) ‣ (e+ (>><< (ape q x)) (pj1 (apel p x)))
-                           
-elttyeq-lm2 {Γ} {a} {A} {B} p q x = memV-right-ext-lm2 _ _ _ (apel p x) (>><< (ape q x)) 
+
+elttyeq-lm2 {Γ} {a} {A} {B} p q x = memV-right-ext-lm2 _ _ _ (apel p x) (>><< (ape q x))
 
 
 
 
 -- The other cruical type equality rule is verified
 
-elteqtyeq :  {Γ : ctx} ->  (a b : raw Γ)  -> (A B : ty Γ) 
+elteqtyeq :  {Γ : ctx} ->  (a b : raw Γ)  -> (A B : ty Γ)
 --
-      -> Γ ==>  a == b :: A    -> Γ ==> A == B 
+      -> Γ ==>  a == b :: A    -> Γ ==> A == B
 --  ---------------------------------------------
               -> Γ ==>  a == b :: B
 --
-elteqtyeq a b A B p q = pair (prj1 p) 
-                              (pair (elttyeq (prj1 (prj2 p)) q) 
+elteqtyeq a b A B p q = pair (prj1 p)
+                              (pair (elttyeq (prj1 (prj2 p)) q)
                                     (elttyeq (prj2 (prj2 p)) q))
 
 
@@ -384,7 +384,7 @@ infix 12 _[_]
 _[_] : {Δ Γ : ctx}  -> raw Γ ->  subst Δ Γ -> raw Δ
 a [ f ] = sub a f
 
-sub-apply : {Δ Γ : ctx}  
+sub-apply : {Δ Γ : ctx}
      -> (a : raw Γ) ->  (f : subst Δ Γ) -> (x : || κ Δ ||)
      -> apr (a [ f ]) x ≐ apr a (aps f x)
 sub-apply a f x = refV _
@@ -403,7 +403,7 @@ A [[ f ]] = Sub A f
 
 -- (Really want to use _[_] for this as well.)
 
-Sub-apply : {Δ Γ : ctx}  
+Sub-apply : {Δ Γ : ctx}
      -> (A : ty Γ) ->  (f : subst Δ Γ) -> (x : || κ Δ ||)
      -> apt (A [[ f ]]) x ≐ apt A (aps f x)
 Sub-apply a f x = refV _
@@ -412,39 +412,39 @@ Sub-apply a f x = refV _
 
 -- Functorial properties of substitutions for raw terms
 
-sub-id-prop : {Γ : ctx}  
-       -> (a : raw Γ) 
+sub-id-prop : {Γ : ctx}
+       -> (a : raw Γ)
 -- ------------------------------------
-       ->   << Raw Γ >> a [ ids ] ~ a   
+       ->   << Raw Γ >> a [ ids ] ~ a
 --
-sub-id-prop {Γ} a = <<>> (<<>> ((λ x → refl' VV _))) 
+sub-id-prop {Γ} a = <<>> (<<>> ((λ x → refl' VV _)))
 
-sub-comp-prop : {Θ Δ Γ : ctx}  
-       -> (a : raw Γ) 
-       ->  (f : subst Δ Γ) -> (g : subst Θ Δ) 
+sub-comp-prop : {Θ Δ Γ : ctx}
+       -> (a : raw Γ)
+       ->  (f : subst Δ Γ) -> (g : subst Θ Δ)
 -- ---------------------------------------------------
        -> << Raw Θ >>  a [ f ⌢ g ]  ~ (a [ f ] [ g ])
 --
-sub-comp-prop a f g = <<>> (<<>> ( λ x → refl' VV _)) 
+sub-comp-prop a f g = <<>> (<<>> ( λ x → refl' VV _))
 
 -- substitutions from a context equalities and their properties
 
 
--- use   ϕ \varphi for this  - to change ** 
+-- use   ϕ \varphi for this  - to change **
 
 subst-trp : {Γ Δ : ctx} ->  (p : << Ctx >> Γ ~ Δ) -> subst Γ Δ
 subst-trp {Γ} {Δ} p = subst.sb (ctx-trp {Γ} {Δ} (>><< p))
 
 
 
-sub-trp-prop : {Γ : ctx}  -> (a : raw Γ) 
-       ->  (p : << Ctx >> Γ ~ Γ) 
+sub-trp-prop : {Γ : ctx}  -> (a : raw Γ)
+       ->  (p : << Ctx >> Γ ~ Γ)
 -- --------------------------------------------
        -> << Raw Γ >> a [ subst-trp p ]  ~ a
 --
-sub-trp-prop {Γ} a p = 
+sub-trp-prop {Γ} a p =
   <<>> (<<>> (λ x → (let lm : << VV >> apr a (ap (ctx-trp (>><< p)) x) ~ (apr a  x)
-                         lm = extensionality1 (raw.rawterm a) (ap (ctx-trp (>><< p)) x) x (κ-trp-id (>><< p) x) 
+                         lm = extensionality1 (raw.rawterm a) (ap (ctx-trp (>><< p)) x) x (κ-trp-id (>><< p) x)
                       in lm)))
 
 
@@ -453,33 +453,33 @@ sub-trp-prop {Γ} a p =
 -- Functorial properties of substitutions for types
 
 
-Sub-id-prop : {Γ : ctx}  
-           -> (A : ty Γ) 
+Sub-id-prop : {Γ : ctx}
+           -> (A : ty Γ)
 -- -----------------------------------
-      ->  << Ty Γ >> A [[ ids ]] ~ A  
--- 
-Sub-id-prop {Γ} A = <<>> (<<>> (λ x → refl' VV (apt A  x))) 
+      ->  << Ty Γ >> A [[ ids ]] ~ A
+--
+Sub-id-prop {Γ} A = <<>> (<<>> (λ x → refl' VV (apt A  x)))
 
-Sub-id-prop-sym : {Γ : ctx}  
-           -> (A : ty Γ) 
+Sub-id-prop-sym : {Γ : ctx}
+           -> (A : ty Γ)
 -- -----------------------------------
-      ->  << Ty Γ >> A [[ ids ]] ~ A  
--- 
+      ->  << Ty Γ >> A [[ ids ]] ~ A
+--
 Sub-id-prop-sym {Γ} A = sym' (Sub-id-prop {Γ} A)
 
-Sub-comp-prop : {Θ Δ Γ : ctx}  
-       -> (A : ty Γ)  ->  (f : subst Δ Γ) -> (g : subst Θ Δ) 
+Sub-comp-prop : {Θ Δ Γ : ctx}
+       -> (A : ty Γ)  ->  (f : subst Δ Γ) -> (g : subst Θ Δ)
 -- -----------------------------------------------------------
       -> << Ty Θ >>  A [[ f ⌢ g ]]  ~ (A [[ f ]] [[ g ]])
 --
-Sub-comp-prop {Θ} {Δ} {Γ} A f g = <<>> (<<>> (λ x → refl' VV (apt (Sub {Θ} {Δ} (Sub {Δ} {Γ} A f) g) x))) 
+Sub-comp-prop {Θ} {Δ} {Γ} A f g = <<>> (<<>> (λ x → refl' VV (apt (Sub {Θ} {Δ} (Sub {Δ} {Γ} A f) g) x)))
 
 
-Sub-comp-prop-sym : {Θ Δ Γ : ctx}  
-       -> (A : ty Γ) 
-       ->  (f : subst Δ Γ) -> (g : subst Θ Δ) 
+Sub-comp-prop-sym : {Θ Δ Γ : ctx}
+       -> (A : ty Γ)
+       ->  (f : subst Δ Γ) -> (g : subst Θ Δ)
 -- -----------------------------------------------------------
-    -> << Ty Θ >>   (A [[ f ]] [[ g ]]) ~ (A [[ f ⌢ g ]]) 
+    -> << Ty Θ >>   (A [[ f ]] [[ g ]]) ~ (A [[ f ⌢ g ]])
 Sub-comp-prop-sym {Θ} {Δ} {Γ} A f g = sym' (Sub-comp-prop {Θ} {Δ} {Γ} A f g )
 
 
@@ -488,47 +488,47 @@ Sub-comp-prop-sym {Θ} {Δ} {Γ} A f g = sym' (Sub-comp-prop {Θ} {Δ} {Γ} A f 
 
 Sub-trp-prop : {Γ : ctx}  -> (A : ty Γ) ->  (p : << Ctx >> Γ ~ Γ) ->
        << Ty Γ >> A [[ subst-trp p ]]  ~ A
-Sub-trp-prop A p   = <<>> (<<>> (λ x → 
+Sub-trp-prop A p   = <<>> (<<>> (λ x →
                          let lm : << VV >> (apt A (ap (ctx-trp (>><< p)) x)) ~ (apt A  x)
-                             lm = extensionality1 (ty.type A) (ap (ctx-trp (>><< p)) x) x (κ-trp-id (>><< p) x)  
+                             lm = extensionality1 (ty.type A) (ap (ctx-trp (>><< p)) x) x (κ-trp-id (>><< p) x)
                              main :  << VV >> (apt (Sub A (subst-trp p))  x) ~ (apt A  x)
                              main = lm
-                         in main)) 
-             
+                         in main))
+
 
 
 
 -- Application of substitutions to judgements
 
 
-tyeq-subst :  {Δ Γ : ctx} -> {A B : ty Γ} -> (f : subst Δ Γ) 
+tyeq-subst :  {Δ Γ : ctx} -> {A B : ty Γ} -> (f : subst Δ Γ)
 --
-                  -> Γ ==> A == B 
---      -------------------------------------------------- 
+                  -> Γ ==> A == B
+--      --------------------------------------------------
          -> Δ ==> A [[ f ]] ==  B [[ f ]]
 --
 tyeq-subst f p = mk-eqty (λ x → (ape p (aps f x)))
 
 
 
-elt-subst :  {Δ Γ : ctx} -> {a : raw Γ} -> {A : ty Γ} -> (f : subst Δ Γ) 
+elt-subst :  {Δ Γ : ctx} -> {a : raw Γ} -> {A : ty Γ} -> (f : subst Δ Γ)
 --
-         -> Γ ==> a :: A 
---   -------------------------------------------------------- 
+         -> Γ ==> a :: A
+--   --------------------------------------------------------
          -> Δ ==> a [ f ] ::  A [[ f ]]
 --
 elt-subst f p = mk-elt (λ x → apel p (aps f x))
 
 
 
-elteq-subst :  {Δ Γ : ctx} -> {a b : raw Γ} -> {A : ty Γ} -> (f : subst Δ Γ) 
+elteq-subst :  {Δ Γ : ctx} -> {a b : raw Γ} -> {A : ty Γ} -> (f : subst Δ Γ)
 --
-         -> Γ ==> a == b :: A 
+         -> Γ ==> a == b :: A
 --   --------------------------------------------------------------------------
          -> Δ ==> a [ f ] == b [ f ] :: A [[ f ]]
 --
 
-elteq-subst f p = pair (\x -> prj1 p (aps f x)) 
+elteq-subst f p = pair (\x -> prj1 p (aps f x))
                                  (pair (elt-subst f (prj1 (prj2 p)))
                                        (elt-subst f (prj2 (prj2 p))))
 
@@ -537,7 +537,7 @@ elteq-subst f p = pair (\x -> prj1 p (aps f x))
 
 -- equality judgements from raw equalities
 
-tyeq-from-eq : {Γ : ctx} -> (A B : ty Γ) 
+tyeq-from-eq : {Γ : ctx} -> (A B : ty Γ)
      ->  << Ty Γ >> A  ~ B
 --   -------------------------
      -> Γ ==> A == B
@@ -550,35 +550,35 @@ elteq-from-eq : {Γ : ctx} -> (A : ty Γ) ->  (a b : raw Γ)
 --   -------------------------
      -> Γ ==> a == b :: A
 elteq-from-eq A a b p q r =  pair (λ x → >><< (>><< (>><< r) x))
-                                  (pair p q) 
+                                  (pair p q)
 
 -- and the reverse rules
 
-eq-from-tyeq : {Γ : ctx} -> (A B : ty Γ) 
-       -> Γ ==> A == B   
+eq-from-tyeq : {Γ : ctx} -> (A B : ty Γ)
+       -> Γ ==> A == B
 --   -------------------------
      ->  << Ty Γ >> A  ~ B
 eq-from-tyeq {Γ} A B p = <<>> (<<>> (λ x → ape p x))
 
 
 eq-from-elteq : {Γ : ctx} -> (A : ty Γ) ->  (a b : raw Γ)
-      -> Γ ==> a == b :: A 
+      -> Γ ==> a == b :: A
 --   -------------------------
      ->  << Raw Γ >> a ~ b
 eq-from-elteq {Γ} A a b r = <<>> (<<>> (λ x → <<>> (prj1 r x)))
 
 
-tyeq-subst2 :  {Δ Γ : ctx} -> (A : ty Γ) -> (f g : subst Δ Γ) 
+tyeq-subst2 :  {Δ Γ : ctx} -> (A : ty Γ) -> (f g : subst Δ Γ)
 --
                   -> < Subst Δ Γ > f ~ g
---      -------------------------------------------------- 
+--      --------------------------------------------------
          -> Δ ==> A [[ f ]] ==  A [[ g ]]
 --
 tyeq-subst2 A f g p = mk-eqty (\x -> (extensionality1 (ty.type A) (aps f x) (aps g x) ( (>< (>< p)) x)))
 
 
 
-elteq-subst2 :  {Δ Γ : ctx} -> {a  : raw Γ} -> {A : ty Γ} -> (f  g : subst Δ Γ) 
+elteq-subst2 :  {Δ Γ : ctx} -> {a  : raw Γ} -> {A : ty Γ} -> (f  g : subst Δ Γ)
 --
            -> Γ ==> a :: A
            -> < Subst Δ Γ > f ~ g
@@ -592,14 +592,14 @@ elteq-subst2 {Δ} {Γ} {a} {A} f g p q = pair (λ x → >><< ( extensionality1 (
 
 
 tysubst-id : {Γ : ctx}
-    -> (A  : ty Γ) 
+    -> (A  : ty Γ)
 --   -------------------------
      -> Γ ==> (A [[ ids ]]) == A
 --
 tysubst-id A = tyeq-from-eq (A [[ ids ]]) A (Sub-id-prop A)
 
 tysubst-id-sym : {Γ : ctx}
-    -> (A  : ty Γ) 
+    -> (A  : ty Γ)
 --   -------------------------
      -> Γ ==> A == (A [[ ids ]])
 --
@@ -636,11 +636,11 @@ eltsubst-com : {Θ Δ Γ : ctx}
      -> Θ ==> (a [ f ⌢ g ]) == (a [ f ] [ g ]) :: (A [[ f ⌢ g ]])
 --
 eltsubst-com {Θ} {Δ} {Γ} A f g a p = elteq-from-eq (A [[ f ⌢ g ]]) (a [ f ⌢ g ]) ((a [ f ]) [ g ])
-                                      (elt-subst (f ⌢ g) p) (elttyeq (elt-subst g (elt-subst f p)) (tysym (tysubst-com A f g))) (sub-comp-prop a f g) 
+                                      (elt-subst (f ⌢ g) p) (elttyeq (elt-subst g (elt-subst f p)) (tysym (tysubst-com A f g))) (sub-comp-prop a f g)
 
 
 
--- a form of subject reduction 
+-- a form of subject reduction
 
 subj-red : {Γ : ctx} -> {A : ty Γ} ->  (a b : raw Γ)
      -> Γ ==> a :: A    ->  << Raw Γ >> a ~ b
@@ -665,10 +665,9 @@ elteq-from-eq2 {Γ} A a b p q  = elteq-from-eq {Γ} A a b p (subj-red {Γ} {A} a
 
 -- useful coercing lemma
 
-A-Aid :  {Γ : ctx} ->  {a : raw Γ}  -> {A  : ty Γ} 
+A-Aid :  {Γ : ctx} ->  {a : raw Γ}  -> {A  : ty Γ}
 --
-              -> Γ ==> a :: A    
+              -> Γ ==> a :: A
 --  --------------------------------------------
               -> Γ ==> a :: A [[ ids ]]
 A-Aid {Γ} {a} {A} p = elttyeq p (tysubst-id-sym A)
-
