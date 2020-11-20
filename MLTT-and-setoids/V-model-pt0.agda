@@ -72,7 +72,7 @@ aps-ext {a} {b} f x y p = extensionality (subst.cmap f) x y p
 -- identity substitution and a short form
 
 idsubst : {Γ : ctx} -> subst Γ Γ
-idsubst {Γ} = subst.sb (idmap {κ Γ})
+idsubst {Γ} = sb (idmap {κ Γ})
 
 ids : {Γ : ctx} -> subst Γ Γ
 ids {Γ} = idsubst {Γ}
@@ -82,7 +82,7 @@ ids {Γ} = idsubst {Γ}
 infix 5 _⌢_  -- ⌢
 
 _⌢_ : {Θ Δ Γ : ctx} -> (f : subst Δ Γ) -> (g : subst Θ Δ) -> (subst Θ Γ)
-f ⌢ g = subst.sb (subst.cmap f ° subst.cmap g)
+f ⌢ g = sb (subst.cmap f ° subst.cmap g)
 
 
 
@@ -187,7 +187,7 @@ record tm (Γ : ctx) (A : ty Γ) : Set1 where
     corr : (x : || κ Γ ||) ->  (apr trm x) ∈ (apt A x)
 
 -- Definition of interpretation of the type-theoretic judgements
---  Γ context
+--  Γ contexts
 --  Γ ==> A type
 --  Γ ==> A == B
 --  Γ ==> a :: A
@@ -433,7 +433,7 @@ sub-comp-prop a f g = <<>> (<<>> ( λ x → refl' VV _))
 -- use   ϕ \varphi for this  - to change **
 
 subst-trp : {Γ Δ : ctx} ->  (p : << Ctx >> Γ ~ Δ) -> subst Γ Δ
-subst-trp {Γ} {Δ} p = subst.sb (ctx-trp {Γ} {Δ} (>><< p))
+subst-trp {Γ} {Δ} p = sb (ctx-trp {Γ} {Δ} (>><< p))
 
 
 

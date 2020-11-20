@@ -87,7 +87,7 @@ ext : {Δ Γ : ctx} -> (A : ty Γ)
       ->  (f : subst Δ Γ) -> (a : raw Δ)
       -> Δ ==> a :: A [[ f ]]
       -> subst Δ (Γ ▷ A)
-ext {Δ} {Γ} A f a p = subst.sb (record { op = ext-op A f a p
+ext {Δ} {Γ} A f a p = sb (record { op = ext-op A f a p
                                        ; ext = ext-ext A f a p })
 --}
 
@@ -150,4 +150,3 @@ Quot-e  : {Γ : ctx}
        -> (r : Γ ==> c :: (Quot {Γ} A R))
        -> Γ ==> QE-op {Γ} A R P d p e q c r :: P [[ els r ]]
 Quot-e = {!!}
-

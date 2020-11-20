@@ -654,7 +654,7 @@ qq-eq :  {Δ Γ : ctx}
        -> < κ (Γ ▷ A) > aps (↑ A h) (x , y) ~ (aps h x , y)
 
 _⌢_ : {Θ Δ Γ : ctx} -> (f : subst Δ Γ) -> (g : subst Θ Δ) -> (subst Θ Γ)
-f ⌢ g = subst.sb (subst.cmap f ° subst.cmap g)
+f ⌢ g = sb (subst.cmap f ° subst.cmap g)
 --}
 
 els-h-sub :  {Δ Γ : ctx}

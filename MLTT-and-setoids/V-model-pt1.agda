@@ -37,7 +37,7 @@ pp-ext : {Γ : ctx} -> (A : ty Γ) -> (u v : || κ (Γ ▷ A) ||) -> (p : < κ (
 pp-ext {Γ} A (u1 , u2) (v1 , v2) p = <> (prj1 (pairV-inv-1 (>< p)))
 
 pp : {Γ : ctx} -> (A : ty Γ) -> subst (Γ ▷ A) Γ
-pp A = subst.sb (record { op = λ u → pj1 u
+pp A = sb (record { op = λ u → pj1 u
                         ; ext = λ u v p → pp-ext A u v p   })
 
 
@@ -108,7 +108,7 @@ ext : {Δ Γ : ctx} -> (A : ty Γ)
       ->  (f : subst Δ Γ) -> (a : raw Δ)
       -> Δ ==> a :: A [[ f ]]
       -> subst Δ (Γ ▷ A)
-ext {Δ} {Γ} A f a p = subst.sb (record { op = ext-op A f a p
+ext {Δ} {Γ} A f a p = sb (record { op = ext-op A f a p
                                        ; ext = ext-ext A f a p })
 
 
@@ -673,4 +673,3 @@ qq-exp {Δ} {Γ} A h a p = ext-irr A (h ⌢ (↓ (A [[ h ]]))) (vv (A [[ h ]]))
              (elttyeq (asm (A [[ h ]])) (tyeq-from-eq  ((A [[ h ]]) [[ ↓ (A [[ h ]]) ]]) (A [[ h ⌢ ↓ (A [[ h ]]) ]])
                                            (Sub-comp-prop-sym A h (↓ (A [[ h ]])))
                                      )) p
-
