@@ -10,7 +10,7 @@
 -- and may be maintained for continuing compatibility with Agda.
 --
 -- A frozen version corresponding to the MSCS paper is available at the tag “MSCS-2023”,
--- https://github.com/peterlefanulumsdaine/palmgren-archive/tree/MSCS-2023
+-- https://github.com/peterlefanulumsdaine/palmgren-archive/tree/MSCS-2023/MLTT-and-setoids
 --
 -- This development should compile at least under Agda 2.5.2, 2.5.3;
 -- see below for more detailed compatibility notes
