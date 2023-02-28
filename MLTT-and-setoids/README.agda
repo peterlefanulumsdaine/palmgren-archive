@@ -9,7 +9,8 @@
 -- The development is hosted at https://github.com/peterlefanulumsdaine/palmgren-archive
 -- and may be maintained for continuing compatibility with Agda.
 --
--- A frozen version corresponding to the MSCS paper is available at the tag “MSCS-2023”.
+-- A frozen version corresponding to the MSCS paper is available at the tag “MSCS-2023”,
+-- https://github.com/peterlefanulumsdaine/palmgren-archive/tree/MSCS-2023
 --
 -- This development should compile at least under Agda 2.5.2, 2.5.3;
 -- see below for more detailed compatibility notes
